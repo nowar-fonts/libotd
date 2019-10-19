@@ -12,7 +12,7 @@ def Dereference(glyph, font):
 	for ref in glyph['references']:
 		target = font['glyf'][ref['glyph']]
 		data = Dereference(target, font) if 'references' in target else copy.deepcopy(target)
-		Transform(data, ref['a'], ref['b'], ref['c'], ref['d'], ref['x'], ref['y'])
+		Transform(data, ref['a'], ref['c'], ref['b'], ref['d'], ref['x'], ref['y'])
 		result['contours'].extend(data['contours'])
 
 	return result
