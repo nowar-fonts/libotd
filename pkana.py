@@ -40,3 +40,19 @@ def ApplyPalt(font):
 					Transform(glyph, 1, 0, 0, 1, d['dx'], 0)
 				if 'dWidth' in d:
 					ChangeAdvanceWidth(glyph, d['dWidth'])
+
+def NowarApplyPaltMultiplied(font, multiplier):
+	for palt in GetLookupPalt(font):
+		for sub in palt['subtables']:
+			for (n, d) in sub.items():
+				glyph = font['glyf'][n]
+				if any([ IsKana(ch) for ch in GetUnicodeScalars(n, font) ]):
+					if 'dx' in d:
+						Transform(glyph, 1, 0, 0, 1, d['dx'], 0)
+					if 'dWidth' in d:
+						ChangeAdvanceWidth(glyph, d['dWidth'])
+				else:
+					if 'dx' in d:
+						Transform(glyph, 1, 0, 0, 1, d['dx'] * multiplier, 0, roundToInt = True)
+					if 'dWidth' in d:
+						ChangeAdvanceWidth(glyph, round(d['dWidth'] * multiplier))
