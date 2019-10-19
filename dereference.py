@@ -1,5 +1,5 @@
 import copy
-from fontlib.transform import Transform
+from libotd.transform import Transform
 
 def Dereference(glyph, font):
 	if 'references' not in glyph:

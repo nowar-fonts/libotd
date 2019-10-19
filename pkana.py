@@ -1,5 +1,5 @@
-from fontlib.unicode import IsKana
-from fontlib.transform import Transform, ChangeAdvanceWidth
+from libotd.unicode import IsKana
+from libotd.transform import Transform, ChangeAdvanceWidth
 
 def GetLookupPalt(font):
 	palt = []
