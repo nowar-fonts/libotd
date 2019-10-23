@@ -83,7 +83,8 @@ def MarkFont(font):
 		if 'glyph_order' in font:
 			Mark(lut, font['glyph_order'][0])
 		Mark(lut, font['cmap'])
-		Mark(lut, font['cmap_uvs'])
+		if 'cmap_uvs' in font:
+			Mark(lut, font['cmap_uvs'])
 		if 'GSUB' in font:
 			for _, lookup in font['GSUB']['lookups'].items():
 				if 'subtables' in lookup:
