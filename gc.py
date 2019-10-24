@@ -9,9 +9,26 @@ def RemoveFeature(table, tag):
 	for f in rm:
 		del table['features'][f]
 
+def SubsetLayoutLanguage(table, tag):
+	rm = []
+	for l in table['languages']:
+		if l[5:9] not in tag:
+			rm.append(l)
+	for l in rm:
+		del table['languages'][l]
+
+def SubsetLayoutScript(table, tag):
+	rm = []
+	for l in table['languages']:
+		if l[0:4] not in tag:
+			rm.append(l)
+	for l in rm:
+		del table['languages'][l]
+
 def NowarRemoveFeatures(asianFont):
-	RemoveFeature(asianFont['GSUB'], [ 'locl', 'pwid', 'fwid', 'hwid', 'twid', 'qwid', 'vert', 'vrt2' ])
-	RemoveFeature(asianFont['GPOS'], [ 'palt', 'halt', 'vert', 'vpal', 'vhal' ])
+	RemoveFeature(asianFont['GSUB'], [ 'locl', 'pwid', 'fwid', 'hwid', 'twid', 'qwid', 'vert', 'vrt2', 'aalt' ])
+	RemoveFeature(asianFont['GPOS'], [ 'palt', 'halt', 'vert', 'vpal', 'vhal', 'vkrn' ])
+	Gc(asianFont)
 
 def FiltFeature(table):
 	visibleLanguages = set()
