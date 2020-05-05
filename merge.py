@@ -1,5 +1,3 @@
-from libotd.gc import Gc
-
 ##
 ## simple merger: merge glyphs and ignore all OpenType layout features
 ##
@@ -112,8 +110,6 @@ def MergeBelow(base, ext, mergeLayout = True):
 			else:
 				base['GDEF'] = ext['GDEF']
 
-	Gc(base)
-
 # base and ext must have diffefent prefixes
 def MergeAbove(base, ext, mergeLayout = True):
 	gid0 = ext['glyph_order'][0]
@@ -145,5 +141,3 @@ def MergeAbove(base, ext, mergeLayout = True):
 				MergeGdef(ext['GDEF'], base['GDEF'])
 			else:
 				base['GDEF'] = ext['GDEF']
-
-	Gc(base)

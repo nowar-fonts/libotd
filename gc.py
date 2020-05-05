@@ -28,7 +28,6 @@ def SubsetLayoutScript(table, tag):
 def NowarRemoveFeatures(asianFont):
 	RemoveFeature(asianFont['GSUB'], [ 'locl', 'pwid', 'fwid', 'hwid', 'twid', 'qwid', 'vert', 'vrt2', 'aalt' ])
 	RemoveFeature(asianFont['GPOS'], [ 'palt', 'halt', 'vert', 'vpal', 'vhal', 'vkrn' ])
-	Gc(asianFont)
 
 def FiltFeature(table):
 	visibleLanguages = set()
