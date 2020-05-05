@@ -51,15 +51,30 @@ def MergeLayout(base, ext, preferExt = False):
 		base['features'][fid] = value
 	for lid, value in ext['lookups'].items():
 		base['lookups'][lid] = value
+
+	newFeature = {}
 	for lid, value in ext['languages'].items():
+		scriptDflt = lid[0:4] + '_DFLT'
 		if lid in base['languages']:
-			base['languages'][lid]['features'] += ext['languages'][lid]['features']
+			newFeature[lid] = base['languages'][lid]['features'] + ext['languages'][lid]['features']
+		elif scriptDflt in base['languages']:
+			newFeature[lid] = base['languages'][scriptDflt]['features'] + ext['languages'][lid]['features']
 		else:
-			base['languages'][lid] = {
-				'features': base['languages']['DFLT_DFLT']['features'] + ext['languages'][lid]['features']
-			}
+			newFeature[lid] = base['languages']['DFLT_DFLT']['features'] + ext['languages'][lid]['features']
+	for lid, value in newFeature.items():
+		if lid in base['languages']:
+			base['languages'][lid]['features'] = value
+		else:
+			base['languages'][lid] = { 'features': value }
+
 	for lid, value in base['languages'].items():
-		if lid not in ext['languages']:
+		scriptDflt = lid[0:4] + '_DFLT'
+		if lid in ext['languages']:
+			# processed
+			pass
+		elif scriptDflt in ext['languages']:
+			base['languages'][lid]['features'] += ext['languages'][scriptDflt]['features']
+		else:
 			base['languages'][lid]['features'] += ext['languages']['DFLT_DFLT']['features']
 	def l(f, s):
 		lookupOrder = []
