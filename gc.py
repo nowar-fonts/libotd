@@ -1,4 +1,4 @@
-kvfilter = lambda d, f: { k: v for k, v in d.items() if f(k, v) }
+kvfilter = lambda d, f: {k: v for k, v in d.items() if f(k, v)}
 
 # tag can be str or list
 def RemoveFeature(table, tag):
@@ -57,7 +57,7 @@ def FiltFeature(table):
 		for lid, lut in table['lookups'].items():
 			if not lut or lid not in visibleLookups:
 				continue
-			if lut['type'] in [ 'gsub_chaining', 'gpos_chaining' ]:
+			if lut['type'] in ['gsub_chaining', 'gpos_chaining']:
 				for rule in lut['subtables']:
 					for application in rule['apply']:
 						visibleLookups.add(application['lookup'])
@@ -79,13 +79,13 @@ def Mark(lut, obj):
 			Mark(lut, v)
 
 def MarkSubtable(lut, type_, st):
-	if type_ in [ 'gsub_single', 'gsub_multi', 'gsub_alternate' ]:
+	if type_ in ['gsub_single', 'gsub_multi', 'gsub_alternate']:
 		for k, v in st.items():
 			if k in lut:
 				Mark(lut, v)
 	elif type_ == 'gsub_ligature':
 		for sub in st['substitutions']:
-			if all([ g in lut for g in sub['from'] ]):
+			if all([g in lut for g in sub['from']]):
 				Mark(lut, sub['to'])
 	elif type_ == 'gsub_chaining':
 		pass
@@ -109,7 +109,7 @@ def MarkFont(font):
 		lutn1 = len(lut)
 		if lutn1 == lutn:
 			break
-	
+
 	for _, g in font['glyf'].items():
 		if 'references' in g:
 			Mark(lut, g['references'])
@@ -133,3 +133,24 @@ def Gc(font):
 		font['glyf'] = g1
 		if nk >= na:
 			break
+
+def ConsolidateLookup(lut, font):
+	if lut["type"] == "gsub_ligature":
+		def consolidateLigature(st):
+			result = []
+			glyf = font["glyf"]
+			for item in st["substitutions"]:
+				if all([glyph in glyf for glyph in item["from"]]) and item["to"] in glyf:
+					result.append(item)
+			return {"substitutions": result}
+		lut["subtables"]= [*map(consolidateLigature, lut["subtables"])]
+
+def ConsolidateLayout(table, font):
+	for _, lut in table["lookups"].items():
+		ConsolidateLookup(lut, font)
+
+def Consolidate(font):
+	if "GSUB" in font:
+		ConsolidateLayout(font["GSUB"], font)
+	if "GPOS" in font:
+		ConsolidateLayout(font["GPOS"], font)
